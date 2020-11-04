@@ -21,13 +21,6 @@ class Autoload
 	private Array $customs;
 
 	/**
-	 * @description 插件加载目录
-	 *
-	 * @var string
-	 */
-	private string $plugins;
-
-	/**
 	 * @description 库目录
 	 *
 	 * @var string
@@ -41,7 +34,6 @@ class Autoload
 	 */
 	public function __construct()
 	{
-		$this->plugins = APPLICATION_PATH . '/application/plugins/';
 		$this->library = APPLICATION_PATH . '/application/library/';
 
 		$this->customs = array();
@@ -54,31 +46,8 @@ class Autoload
 	 */
 	public function register()
 	{
-		spl_autoload_register(array($this, 'autoloadPlugins'));
 		spl_autoload_register(array($this, 'autoloadUserLib'));
 		spl_autoload_register(array($this, 'autoloadLocal'));
-	}
-
-	/**
-	 * @description 插件库路径
-     *
-     * @param string $className
-	 *
-	 * @return null
-	 */
-	public function autoloadPlugins(string $className)
-	{
-		try {
-			$className = $this->plugins . str_replace('\\', '/', $className) . '.php';
-			$className = str_replace('//', '/', $className);
-			if (!is_file($className)) {
-				return;
-			}
-
-			require_once $className;
-		} catch (\Throwable $e) {	
-			echo $e->getMessage();
-		}
 	}
 
 	/**

@@ -19,12 +19,14 @@ use Kovey\Library\Config\Manager;
 use Kovey\Tcp\App\Bootstrap\Autoload;
 use Kovey\Tcp\Server\Server;
 use Kovey\Library\Process\UserProcess;
-use Kovey\Library\Logger\Logger;
-use Kovey\Library\Logger\Monitor;
+use Kovey\Logger\Logger;
+use Kovey\Logger\Monitor;
 use Google\Protobuf\Internal\Message;
 use Kovey\Library\Exception\CloseConnectionException;
+use Kovey\Library\Exception\KoveyException;
+use Kovey\Connnection\AppInterface;
 
-class App
+class App implements AppInterface
 {
 	/**
 	 * @description App实例
@@ -133,7 +135,7 @@ class App
 	 */
 	public static function getInstance() : App
 	{
-		if (!self::$instance instanceof App) {
+		if (empty(self::$instance) || !self::$instance instanceof App) {
 			self::$instance = new self();
 		}
 
@@ -249,16 +251,18 @@ class App
 	 * @param int $fd
 	 *
 	 * @param string $ip
+     *
+     * @param string $traceId
 	 *
 	 * @return Array
 	 */
-	public function handler(string $packet, int $action, $fd, string $ip) : Array
+	public function handler(string $packet, int $action, $fd, string $ip, string $traceId) : Array
 	{
 		$begin = microtime(true);
 		$reqTime = time();
 		try {
 			if (!isset($this->events['protobuf'])) {
-                $this->sendToMonitor($reqTime, $begin, $ip, 'exception');
+                $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
 				if (isset($this->events['error'])) {
 					return call_user_func($this->events['error'], 'protobuf event is not register');
 				}
@@ -268,7 +272,7 @@ class App
 
 			$message = call_user_func($this->events['protobuf'], $packet, $action);
 			if (empty($message['handler']) || empty($message['method'])) {
-				$this->sendToMonitor($reqTime, $begin, $ip, 'exception');
+				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
 				if (isset($this->events['error'])) {
 					return call_user_func($this->events['error'], 'unknown message');
 				}
@@ -278,7 +282,7 @@ class App
 
 			$instance = $this->container->get($this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']));
 			if (!$instance instanceof HandlerAbstract) {
-                $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $message);
+                $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
 				if (isset($this->events['error'])) {
 					return call_user_func($this->events['error'], sprintf('%s is not extends HandlerAbstract', ucfirst($message['handler'])));
 				}
@@ -289,24 +293,24 @@ class App
 			if (!isset($this->events['run_handler'])) {
 				$method = $message['method'];
 				$result = $instance->$method($message['message'], $fd, $ip);
-				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $message);
+				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
                 return $result;
 			}
 
 			$result = call_user_func($this->events['run_handler'], $instance, $message['method'], $message['message'], $fd, $ip);
-			$this->sendToMonitor($reqTime, $begin, $ip, 'success', $message);
+			$this->sendToMonitor($reqTime, $begin, $ip, 'success', $traceId, $message);
 			return $result;
         } catch (CloseConnectionException $e) {
             throw $e;
-		} catch (\Exception $e) {
-			Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-            $this->sendToMonitor($reqTime, $begin, $ip, 'exception');
+		} catch (KoveyException $e) {
+			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+            $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
 			if (isset($this->events['error'])) {
 				return call_user_func($this->events['error'], 'exception');
 			}
 		} catch (\Throwable $e) {
-			Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-            $this->sendToMonitor($reqTime, $begin, $ip, 'exception');
+			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+            $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
 			if (isset($this->events['error'])) {
 				return call_user_func($this->events['error'], 'throwable exception');
 			}
@@ -323,12 +327,14 @@ class App
 	 * @param string $ip
 	 *
 	 * @param string $type
+     *
+     * @param string $traceId
 	 *
 	 * @param mixed $message
 	 *
 	 * @return null
 	 */
-	private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, $message = null)
+	private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, string $traceId, $message = null)
 	{
 		$end = microtime(true);
         $params = '[]';
@@ -351,7 +357,8 @@ class App
 			'ip' => $ip,
 			'time' => $reqTime,
 			'timestamp' => date('Y-m-d H:i:s', $reqTime),
-			'minute' => date('YmdHi', $reqTime)
+            'minute' => date('YmdHi', $reqTime),
+            'traceId' => $traceId
 		);
 
 		$this->monitor($data);
@@ -602,12 +609,15 @@ class App
 	 * @param string $name
 	 *
 	 * @param PoolInterface $pool
+     *
+     * @param int $partition = 0
 	 *
 	 * @return App
 	 */
-	public function registerPool(string $name, PoolInterface $pool) : App
+	public function registerPool(string $name, PoolInterface $pool, int $partition = 0) : AppInterface
 	{
-		$this->pools[$name] = $pool;
+        $this->pools[$name] ??= array();
+		$this->pools[$name][$partition] = $pool;
 		return $this;
 	}
 
@@ -615,12 +625,14 @@ class App
 	 * @description 获取连接池
 	 *
 	 * @param string $name
+     *
+     * @param int $partition
 	 *
 	 * @return ?PoolInterface
 	 */
-	public function getPool($name) : ?PoolInterface
+	public function getPool(string $name, int $partition = 0) : ?PoolInterface
 	{
-		return $this->pools[$name] ?? null;
+		return $this->pools[$name][$partition] ?? null;
 	}
 
 	/**

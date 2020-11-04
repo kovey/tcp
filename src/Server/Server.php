@@ -14,7 +14,8 @@ namespace Kovey\Tcp\Server;
 use Kovey\Tcp\Protocol\ProtocolInterface;
 use Kovey\Library\Exception\BusiException;
 use Kovey\Library\Exception\CloseConnectionException;
-use Kovey\Library\Logger\Logger;
+use Kovey\Library\Exception\KoveyException;
+use Kovey\Logger\Logger;
 use Kovey\Library\Server\PortInterface;
 
 class Server implements PortInterface
@@ -344,13 +345,14 @@ class Server implements PortInterface
 		$begin = microtime(true);
 		$reqTime = time();
 		$result = null;
+        $traceId = hash('sha256', uniqid($fd, true) . random_int(1000000, 9999999));
 
         try {
 			if (!isset($this->events['handler'])) {
 				return;
 			}
 
-			$result = call_user_func($this->events['handler'], $packet->getMessage(), $packet->getAction(), $fd, $this->serv->getClientInfo($fd)['remote_ip']);
+			$result = call_user_func($this->events['handler'], $packet->getMessage(), $packet->getAction(), $fd, $this->serv->getClientInfo($fd)['remote_ip'], $traceId);
 			if (empty($result) || !isset($result['message']) || !isset($result['action'])) {
                 return;
 			}
@@ -358,8 +360,9 @@ class Server implements PortInterface
             $this->send($result['message'], $result['action'], $fd);
         } catch (CloseConnectionException $e) {
             $this->serv->close($fd);
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-		} catch (BusiException $e) {
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+		} catch (BusiException | KoveyException $e) {
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
             if (!isset($this->events['error'])) {
                 return;
             }
@@ -371,13 +374,13 @@ class Server implements PortInterface
             $this->send($result['message'], $result['action'], $fd);
         } catch (\Throwable $e) {
 			if ($this->isRunDocker) {
-				Logger::writeExceptionLog(__LINE__, __FILE__, $e);
+				Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
 			} else {
 				echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
 			}
         } finally {
             $end = microtime(true);
-            $this->monitor($begin, $end, $packet, $reqTime, $result, $fd);
+            $this->monitor($begin, $end, $packet, $reqTime, $result, $fd, $traceId);
         }
     }
 
@@ -395,10 +398,12 @@ class Server implements PortInterface
 	 * @param Array $result
 	 *
 	 * @param int $fd
+     *
+     * @param string $traceId
 	 *
 	 * @return null
 	 */
-	private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, Array $result, $fd)
+	private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, Array $result, $fd, string $traceId)
 	{
 		if (!isset($this->events['monitor'])) {
 			return;
@@ -411,7 +416,8 @@ class Server implements PortInterface
 				'ip' => $this->serv->getClientInfo($fd)['remote_ip'],
 				'time' => $reqTime,
 				'timestamp' => date('Y-m-d H:i:s', $reqTime),
-				'minute' => date('YmdHi', $reqTime),
+                'minute' => date('YmdHi', $reqTime),
+                'traceId' => $traceId
 			));
 		} catch (\Throwable $e) {
 			if ($this->isRunDocker) {
