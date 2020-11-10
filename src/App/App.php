@@ -438,7 +438,7 @@ class App implements AppInterface
                     }
 
                     if (count($p->getErrors()) > 0) {
-                        Logger::writeErrorLog(__LINE__, __FILE__, implode(';', $pool->getErrors()));
+                        Logger::writeErrorLog(__LINE__, __FILE__, implode(';', $p->getErrors()));
                     }
                     continue;
                 }
