@@ -13,7 +13,7 @@ namespace Kovey\Tcp\App;
 
 use Kovey\Tcp\Handler\HandlerAbstract;
 use Kovey\Library\Process\ProcessAbstract;
-use Kovey\Connnection\Pool\PoolInterface;
+use Kovey\Connection\Pool\PoolInterface;
 use Kovey\Library\Container\ContainerInterface;
 use Kovey\Library\Config\Manager;
 use Kovey\Tcp\App\Bootstrap\Autoload;
@@ -24,7 +24,7 @@ use Kovey\Logger\Monitor;
 use Google\Protobuf\Internal\Message;
 use Kovey\Library\Exception\CloseConnectionException;
 use Kovey\Library\Exception\KoveyException;
-use Kovey\Connnection\AppInterface;
+use Kovey\Connection\AppInterface;
 
 class App implements AppInterface
 {
