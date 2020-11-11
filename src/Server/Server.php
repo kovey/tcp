@@ -380,7 +380,7 @@ class Server implements PortInterface
 			}
         } finally {
             $end = microtime(true);
-            $this->monitor($begin, $end, $packet, $reqTime, $result, $fd, $traceId);
+            $this->monitor($begin, $end, $packet, $reqTime, $fd, $traceId);
         }
     }
 
@@ -403,7 +403,7 @@ class Server implements PortInterface
 	 *
 	 * @return null
 	 */
-	private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, Array $result, $fd, string $traceId)
+	private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, $fd, string $traceId)
 	{
 		if (!isset($this->events['monitor'])) {
 			return;
@@ -417,7 +417,7 @@ class Server implements PortInterface
 				'time' => $reqTime,
 				'timestamp' => date('Y-m-d H:i:s', $reqTime),
                 'minute' => date('YmdHi', $reqTime),
-                'traceId' => $traceId
+                'traceId' => $traceId,
 			));
 		} catch (\Throwable $e) {
 			if ($this->isRunDocker) {
