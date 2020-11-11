@@ -280,7 +280,7 @@ class App implements AppInterface
 				return array();
 			}
 
-			$instance = $this->container->get($this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']));
+			$instance = $this->container->get($this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']), $traceId);
 			if (!$instance instanceof HandlerAbstract) {
                 $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
 				if (isset($this->events['error'])) {
