@@ -13,9 +13,9 @@ namespace Kovey\Tcp\App\Bootstrap;
 
 use Kovey\Library\Process;
 use Kovey\Library\Config\Manager;
-use Kovey\Library\Logger\Logger;
-use Kovey\Library\Logger\Monitor;
-use Kovey\Library\Logger\Db;
+use Kovey\Logger\Logger;
+use Kovey\Logger\Monitor;
+use Kovey\Logger\Db;
 use Kovey\Library\Container\Container;
 use Kovey\Tcp\App\App;
 use Kovey\Tcp\Server\Server;
