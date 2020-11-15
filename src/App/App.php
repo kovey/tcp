@@ -364,7 +364,7 @@ class App implements AppInterface
 
 		$data = array(
             'delay' => round(($end - $begin) * 1000, 2),
-            'request_time' => $begin,
+            'request_time' => $begin * 10000,
 			'class' => $message['handler'] ?? '',
 			'method' => $message['method'] ?? '',
 			'type' => $type,
