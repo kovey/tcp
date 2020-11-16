@@ -25,6 +25,7 @@ use Google\Protobuf\Internal\Message;
 use Kovey\Library\Exception\CloseConnectionException;
 use Kovey\Library\Exception\KoveyException;
 use Kovey\Connection\AppInterface;
+use Kovey\Library\Util\Json;
 
 class App implements AppInterface
 {
@@ -260,38 +261,42 @@ class App implements AppInterface
 	{
 		$begin = microtime(true);
 		$reqTime = time();
+        $result = array();
+        $message = array();
+        $monitorType = '';
 		try {
 			if (!isset($this->events['protobuf'])) {
-                $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
+                $monitorType = 'exception';
 				if (isset($this->events['error'])) {
-					return call_user_func($this->events['error'], 'protobuf event is not register');
+					$result = call_user_func($this->events['error'], 'protobuf event is not register');
 				}
 
-				return array();
+                return $result;
 			}
 
 			$message = call_user_func($this->events['protobuf'], $packet, $action);
 			if (empty($message['handler']) || empty($message['method'])) {
-				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
+                $monitorType = 'exception';
 				if (isset($this->events['error'])) {
-					return call_user_func($this->events['error'], 'unknown message');
+					$result = call_user_func($this->events['error'], 'unknown message');
 				}
 
-				return array();
+                return $result;
 			}
 
             $class = $this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']);
             $keywords = $this->container->getKeywords($class, $message['method']);
 			$instance = $this->container->get($class, $traceId, $keywords['ext']);
 			if (!$instance instanceof HandlerAbstract) {
-                $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
+                $monitorType = 'exception';
 				if (isset($this->events['error'])) {
-					return call_user_func($this->events['error'], sprintf('%s is not extends HandlerAbstract', ucfirst($message['handler'])));
+					$result = call_user_func($this->events['error'], sprintf('%s is not extends HandlerAbstract', ucfirst($message['handler'])));
 				}
 
-				return array();
+				return $result;
 			}
 
+            $monitorType = 'success';
             $openTransaction = isset($keywords['openTransaction']) && $keywords['openTransaction'];
 			if (!isset($this->events['run_handler'])) {
 				$method = $message['method'];
@@ -307,7 +312,6 @@ class App implements AppInterface
                 }  else {
                     $result = $instance->$method($message['message'], $fd, $ip);
                 }
-				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
                 return $result;
 			}
 
@@ -323,23 +327,26 @@ class App implements AppInterface
             } else {
                 $result = call_user_func($this->events['run_handler'], $instance, $message['method'], $message['message'], $fd, $ip);
             }
-			$this->sendToMonitor($reqTime, $begin, $ip, 'success', $traceId, $message);
 			return $result;
         } catch (CloseConnectionException $e) {
             throw $e;
 		} catch (KoveyException $e) {
 			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
-            $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
+            $monitorType = 'exception';
 			if (isset($this->events['error'])) {
-				return call_user_func($this->events['error'], 'exception');
+				$result = call_user_func($this->events['error'], 'exception');
 			}
+            return $result;
 		} catch (\Throwable $e) {
 			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
-            $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId);
+            $monitorType = 'exception';
 			if (isset($this->events['error'])) {
-				return call_user_func($this->events['error'], 'throwable exception');
+				$result = call_user_func($this->events['error'], 'throwable exception');
 			}
-		}
+            return $result;
+        } finally {
+			$this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result);
+        }
 	}
 
 	/**
@@ -355,11 +362,13 @@ class App implements AppInterface
      *
      * @param string $traceId
 	 *
-	 * @param mixed $message
+	 * @param Array $message
+     *
+     * @param Array $result
 	 *
 	 * @return null
 	 */
-	private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, string $traceId, $message = null)
+	private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, string $traceId, Array $message, Array $result)
 	{
 		$end = microtime(true);
         $params = '[]';
@@ -372,13 +381,20 @@ class App implements AppInterface
                 $params = $message['message'];
             }
         }
+        if (!empty($result['message'])) {
+            if ($result['message'] instanceof Message) {
+                $result['message'] = $result['message']->serializeToJsonString();
+            }
+        }
 
 		$data = array(
-			'delay' => round(($end - $begin) * 1000, 2),
-			'handler' => $message['handler'] ?? '',
+            'delay' => round(($end - $begin) * 1000, 2),
+            'request_time' => $begin * 10000,
+			'class' => $message['handler'] ?? '',
 			'method' => $message['method'] ?? '',
 			'type' => $type,
 			'params' => $params,
+            'response' => Json::encode($result),
 			'ip' => $ip,
 			'time' => $reqTime,
 			'timestamp' => date('Y-m-d H:i:s', $reqTime),
@@ -428,21 +444,23 @@ class App implements AppInterface
 	 * @param string $method
 	 *
 	 * @param Array $args
+     *
+     * @param string $traceId
 	 *
 	 * @return null
 	 */
-	public function pipeMessage(string $path, string $method, Array $args)
+	public function pipeMessage(string $path, string $method, Array $args, string $traceId)
 	{
 		if (!isset($this->events['pipeMessage'])) {
 			return;
 		}
 
 		try {
-			call_user_func($this->events['pipeMessage'], $path, $method, $args);
+			call_user_func($this->events['pipeMessage'], $path, $method, $args, $traceId);
 		} catch (\Exception $e) {
-			Logger::writeExceptionLog(__LINE__, __FILE__, $e);
+			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
 		} catch (\Throwable $e) {
-			Logger::writeExceptionLog(__LINE__, __FILE__, $e);
+			Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
 		}
 	}
 

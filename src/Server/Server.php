@@ -203,11 +203,7 @@ class Server implements PortInterface
 		try {
 			call_user_func($this->events['initPool'], $this);
 		} catch (\Throwable $e) {
-			if ($this->isRunDocker) {
-				Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-			} else {
-				echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-			}
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e);
 		}
     }
 
@@ -254,14 +250,9 @@ class Server implements PortInterface
 				return;
 			}
 
-			call_user_func($this->events['pipeMessage'], $data['p'] ?? '', $data['m'] ?? '', $data['a'] ?? array());
+			call_user_func($this->events['pipeMessage'], $data['p'] ?? '', $data['m'] ?? '', $data['a'] ?? array(), $data['t'] ?? '');
         } catch (\Throwable $e) {
-			if ($this->isRunDocker) {
-				Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-			} else {
-				echo $e->getMessage() . PHP_EOL .
-					$e->getTraceAsString() . PHP_EOL;
-			}
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $data['t'] ?? '');
 		}
     }
 
@@ -373,11 +364,7 @@ class Server implements PortInterface
 
             $this->send($result['message'], $result['action'], $fd);
         } catch (\Throwable $e) {
-			if ($this->isRunDocker) {
-				Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
-			} else {
-				echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-			}
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         } finally {
             $end = microtime(true);
             $this->monitor($begin, $end, $packet, $reqTime, $fd, $traceId);
@@ -412,19 +399,19 @@ class Server implements PortInterface
 		try {
 			call_user_func($this->events['monitor'], array(
 				'delay' => round(($end - $begin) * 1000, 2),
+                'request_time' => $begin,
 				'action' => $packet->getAction(),
-				'ip' => $this->serv->getClientInfo($fd)['remote_ip'],
+                'packet' => base64_encode($packet->getMessage()),
+				'ip' => $this->getRemoteIp($fd),
 				'time' => $reqTime,
 				'timestamp' => date('Y-m-d H:i:s', $reqTime),
                 'minute' => date('YmdHi', $reqTime),
+                'class' => '',
+                'method' => '',
                 'traceId' => $traceId,
 			));
 		} catch (\Throwable $e) {
-			if ($this->isRunDocker) {
-				Logger::writeExceptionLog(__LINE__, __FILE__, $e);
-			} else {
-				echo $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
-			}
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e);
 		}
 	}
 
@@ -517,7 +504,12 @@ class Server implements PortInterface
      */
     public function getRemoteIp($fd) : string
     {
-        return $this->serv->getClientInfo($fd)['remote_ip'];
+        $info = $this->serv->getClientInfo($fd);
+        if (empty($info)) {
+            return '';
+        }
+
+        return $info['remote_ip'] ?? '';
     }
 
     /**
