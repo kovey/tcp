@@ -280,7 +280,9 @@ class App implements AppInterface
 				return array();
 			}
 
-			$instance = $this->container->get($this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']), $traceId);
+            $class = $this->config['tcp']['handler'] . '\\' . ucfirst($message['handler']);
+            $keywords = $this->container->getKeywords($class, $message['method']);
+			$instance = $this->container->get($class, $traceId, $keywords['ext']);
 			if (!$instance instanceof HandlerAbstract) {
                 $this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
 				if (isset($this->events['error'])) {
@@ -290,14 +292,37 @@ class App implements AppInterface
 				return array();
 			}
 
+            $openTransaction = isset($keywords['openTransaction']) && $keywords['openTransaction'];
 			if (!isset($this->events['run_handler'])) {
 				$method = $message['method'];
-				$result = $instance->$method($message['message'], $fd, $ip);
+                if ($openTransaction) {
+                    $keywords['database']->beginTransaction();
+                    try {
+                        $result = $instance->$method($message['message'], $fd, $ip);
+                        $keywords['database']->commit();
+                    } catch (\Throwable $e) {
+                        $keywords['database']->rollBack();
+                        throw $e;
+                    }
+                }  else {
+                    $result = $instance->$method($message['message'], $fd, $ip);
+                }
 				$this->sendToMonitor($reqTime, $begin, $ip, 'exception', $traceId, $message);
                 return $result;
 			}
 
-			$result = call_user_func($this->events['run_handler'], $instance, $message['method'], $message['message'], $fd, $ip);
+            if ($openTransaction) {
+                $keywords['database']->beginTransaction();
+                try {
+                    $result = call_user_func($this->events['run_handler'], $instance, $message['method'], $message['message'], $fd, $ip);
+                    $keywords['database']->commit();
+                } catch (\Throwable $e) {
+                    $keywords['database']->rollBack();
+                    throw $e;
+                }
+            } else {
+                $result = call_user_func($this->events['run_handler'], $instance, $message['method'], $message['message'], $fd, $ip);
+            }
 			$this->sendToMonitor($reqTime, $begin, $ip, 'success', $traceId, $message);
 			return $result;
         } catch (CloseConnectionException $e) {
