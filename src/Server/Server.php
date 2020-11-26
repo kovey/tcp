@@ -276,7 +276,7 @@ class Server implements PortInterface
         } catch (CloseConnectionException $e) {
            $this->serv->close($fd);
         } catch (BusiException $e) {
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e);
+            Logger::writeBusiException(__LINE__, __FILE__, $e);
         } catch (\Throwable $e) {
             Logger::writeExceptionLog(__LINE__, __FILE__, $e);
             $this->serv->close($fd);
@@ -353,7 +353,7 @@ class Server implements PortInterface
             $this->serv->close($fd);
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         } catch (BusiException | KoveyException $e) {
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+            Logger::writeBusiException(__LINE__, __FILE__, $e, $traceId);
             if (!isset($this->events['error'])) {
                 return;
             }
