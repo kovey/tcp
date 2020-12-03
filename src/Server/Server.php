@@ -399,7 +399,7 @@ class Server implements PortInterface
         try {
             call_user_func($this->events['monitor'], array(
                 'delay' => round(($end - $begin) * 1000, 2),
-                'request_time' => $begin,
+                'request_time' => $begin * 10000,
                 'action' => $packet->getAction(),
                 'packet' => base64_encode($packet->getMessage()),
                 'ip' => $this->getRemoteIp($fd),
@@ -408,7 +408,10 @@ class Server implements PortInterface
                 'minute' => date('YmdHi', $reqTime),
                 'class' => '',
                 'method' => '',
+                'service' => $this->conf['name'],
+                'from' => $this->conf['name'],
                 'traceId' => $traceId,
+                'end' => $end * 10000
             ));
         } catch (\Throwable $e) {
             Logger::writeExceptionLog(__LINE__, __FILE__, $e);

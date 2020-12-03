@@ -13,4 +13,10 @@ namespace Kovey\Tcp\Handler;
 
 abstract class HandlerAbstract
 {
+    protected string $clientIp;
+
+    public function setClientIp(string $clientIp)
+    {
+        $this->clientIp = $clientIp;
+    }
 }
