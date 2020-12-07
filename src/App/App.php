@@ -511,8 +511,12 @@ class App implements AppInterface
      */
     private function monitor(Array $data)
     {
-        $this->userProcess->push('monitor', $data);
         Monitor::write($data);
+        if (isset($this->events['monitor'])) {
+            go (function ($data) {
+                call_user_func($this->events['monitor'], $data);
+            }, $data);
+        }
     }
 
     /**

@@ -414,7 +414,7 @@ class Server implements PortInterface
                 'end' => $end * 10000
             ));
         } catch (\Throwable $e) {
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e);
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         }
     }
 
