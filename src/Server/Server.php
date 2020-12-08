@@ -337,6 +337,8 @@ class Server implements PortInterface
         $reqTime = time();
         $result = null;
         $traceId = hash('sha256', uniqid($fd, true) . random_int(1000000, 9999999));
+        $trace = '';
+        $err = '';
 
         try {
             if (!isset($this->events['handler'])) {
@@ -353,6 +355,8 @@ class Server implements PortInterface
             $this->serv->close($fd);
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         } catch (BusiException | KoveyException $e) {
+            $trace = $e->getTraceAsString();
+            $err = $e->getMessage();
             Logger::writeBusiException(__LINE__, __FILE__, $e, $traceId);
             if (!isset($this->events['error'])) {
                 return;
@@ -364,10 +368,12 @@ class Server implements PortInterface
 
             $this->send($result['message'], $result['action'], $fd);
         } catch (\Throwable $e) {
+            $trace = $e->getTraceAsString();
+            $err = $e->getMessage();
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         } finally {
             $end = microtime(true);
-            $this->monitor($begin, $end, $packet, $reqTime, $fd, $traceId);
+            $this->monitor($begin, $end, $packet, $reqTime, $fd, $traceId, $trace, $err);
         }
     }
 
@@ -390,7 +396,7 @@ class Server implements PortInterface
      *
      * @return null
      */
-    private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, $fd, string $traceId)
+    private function monitor(float $begin, float $end, ProtocolInterface $packet, int $reqTime, $fd, string $traceId, string $trace, string $err)
     {
         if (!isset($this->events['monitor'])) {
             return;
@@ -409,9 +415,12 @@ class Server implements PortInterface
                 'class' => '',
                 'method' => '',
                 'service' => $this->conf['name'],
+                'service_type' => 'tcp',
                 'from' => $this->conf['name'],
                 'traceId' => $traceId,
-                'end' => $end * 10000
+                'end' => $end * 10000,
+                'trace' => $trace,
+                'err' => $err
             ));
         } catch (\Throwable $e) {
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);

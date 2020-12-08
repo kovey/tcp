@@ -264,6 +264,8 @@ class App implements AppInterface
         $result = array();
         $message = array();
         $monitorType = '';
+        $trace = '';
+        $err = '';
         try {
             if (!isset($this->events['protobuf'])) {
                 $monitorType = 'exception';
@@ -332,6 +334,8 @@ class App implements AppInterface
         } catch (CloseConnectionException $e) {
             throw $e;
         } catch (KoveyException $e) {
+            $trace = $e->getTraceAsString();
+            $err = $e->getMessage();
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
             $monitorType = 'exception';
             if (isset($this->events['error'])) {
@@ -339,6 +343,8 @@ class App implements AppInterface
             }
             return $result;
         } catch (\Throwable $e) {
+            $trace = $e->getTraceAsString();
+            $err = $e->getMessage();
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
             $monitorType = 'exception';
             if (isset($this->events['error'])) {
@@ -346,7 +352,7 @@ class App implements AppInterface
             }
             return $result;
         } finally {
-            $this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result);
+            $this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result, $trace, $err);
         }
     }
 
@@ -369,7 +375,7 @@ class App implements AppInterface
      *
      * @return null
      */
-    private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, string $traceId, Array $message, Array $result)
+    private function sendToMonitor(int $reqTime, float $begin, string $ip, string $type, string $traceId, Array $message, Array $result, string $trace, string $err)
     {
         $end = microtime(true);
         $params = '[]';
@@ -394,6 +400,7 @@ class App implements AppInterface
             'class' => $message['handler'] ?? '',
             'method' => $message['method'] ?? '',
             'service' => $this->config['server']['name'],
+            'service_type' => 'tcp',
             'type' => $type,
             'params' => $params,
             'response' => Json::encode($result),
@@ -403,7 +410,9 @@ class App implements AppInterface
             'minute' => date('YmdHi', $reqTime),
             'traceId' => $traceId,
             'from' => $this->config['server']['name'],
-            'end' => $end * 10000
+            'end' => $end * 10000,
+            'trace' => $trace,
+            'err' => $err
         );
 
         $this->monitor($data);
