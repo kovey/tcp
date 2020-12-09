@@ -352,7 +352,9 @@ class App implements AppInterface
             }
             return $result;
         } finally {
-            $this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result, $trace, $err);
+            if (!isset($this->config['server']['monitor_open']) || $this->config['server']['monitor_open'] !== 'Off') {
+                $this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result, $trace, $err);
+            }
         }
     }
 

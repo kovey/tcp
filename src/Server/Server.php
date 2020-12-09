@@ -372,6 +372,10 @@ class Server implements PortInterface
             $err = $e->getMessage();
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
         } finally {
+            if (isset($this->conf['monitor_open']) && $this->conf['monitor_open'] === 'Off') {
+                return;
+            }
+
             $end = microtime(true);
             $this->monitor($begin, $end, $packet, $reqTime, $fd, $traceId, $trace, $err);
         }
