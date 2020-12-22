@@ -2,4 +2,4 @@
 #### Description
 ###### TCP Server
 ###### Usage:
-    - composer require kovey/tcp
+    - composer require kovey/tcp-server
