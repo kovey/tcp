@@ -109,9 +109,9 @@ class App implements AppInterface
     /**
      * @description 其他服务的对象
      *
-     * @var mixed
+     * @var Array
      */
-    private $otherApps;
+    private Array $otherApps;
 
     /**
      * @description 构造函数
