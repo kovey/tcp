@@ -306,14 +306,14 @@ class App implements AppInterface
                 if ($keywords['openTransaction']) {
                     $keywords['database']->getConnection()->beginTransaction();
                     try {
-                        $result = $instance->$method($message['message'], $fd, $ip);
+                        $result = call_user_func(array($instance, $method), $message['message'], $fd, $ip);
                         $keywords['database']->getConnection()->commit();
                     } catch (\Throwable $e) {
                         $keywords['database']->getConnection()->rollBack();
                         throw $e;
                     }
                 }  else {
-                    $result = $instance->$method($message['message'], $fd, $ip);
+                    $result = call_user_func(array($instance, $method), $message['message'], $fd, $ip);
                 }
                 return $result;
             }
