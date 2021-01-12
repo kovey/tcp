@@ -16,7 +16,7 @@ use Kovey\Library\Config\Manager;
 use Kovey\Logger\Logger;
 use Kovey\Logger\Monitor;
 use Kovey\Logger\Db;
-use Kovey\Library\Container\Container;
+use Kovey\Container\Container;
 use Kovey\Tcp\App\App;
 use Kovey\Tcp\Server\Server;
 use Kovey\Library\Process\UserProcess;
@@ -85,5 +85,13 @@ class Bootstrap
         require_once $file;
 
         $app->registerCustomBootstrap(new \Bootstrap());
+    }
+
+    public function __initParseInject(App $app)
+    {
+        $app->registerLocalLibPath(APPLICATION_PATH . '/application');
+
+        $handler = $app->getConfig()['tcp']['handler'];
+        $app->getContainer()->parse(APPLICATION_PATH . '/application/' . $handler, $handler);
     }
 }
