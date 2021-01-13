@@ -12,13 +12,13 @@
 namespace Kovey\Tcp\App;
 
 use Kovey\Tcp\Handler\HandlerAbstract;
-use Kovey\Library\Process\ProcessAbstract;
+use Kovey\Process\ProcessAbstract;
 use Kovey\Connection\Pool\PoolInterface;
 use Kovey\Container\ContainerInterface;
 use Kovey\Library\Config\Manager;
 use Kovey\Tcp\App\Bootstrap\Autoload;
 use Kovey\Tcp\Server\Server;
-use Kovey\Library\Process\UserProcess;
+use Kovey\Process\UserProcess;
 use Kovey\Logger\Logger;
 use Kovey\Logger\Monitor;
 use Google\Protobuf\Internal\Message;
@@ -566,10 +566,7 @@ class App implements AppInterface
     {
         $fields = array(
             'server' => array(
-                'host', 'port', 'log_file', 'pid_file'
-            ), 
-            'logger' => array(
-                'info', 'exception', 'error', 'warning'
+                'host', 'port', 'logger_dir', 'pid_file'
             ), 
             'tcp' => array(
                 'name', 'handler'

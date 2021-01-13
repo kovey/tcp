@@ -11,7 +11,7 @@
  */
 namespace Kovey\Tcp\App\Bootstrap;
 
-use Kovey\Library\Process;
+use Kovey\Process\Process;
 use Kovey\Library\Config\Manager;
 use Kovey\Logger\Logger;
 use Kovey\Logger\Monitor;
@@ -19,7 +19,7 @@ use Kovey\Logger\Db;
 use Kovey\Container\Container;
 use Kovey\Tcp\App\App;
 use Kovey\Tcp\Server\Server;
-use Kovey\Library\Process\UserProcess;
+use Kovey\Process\UserProcess;
 
 class Bootstrap
 {
@@ -33,12 +33,9 @@ class Bootstrap
     public function __initLogger(App $app)
     {
         ko_change_process_name(Manager::get('server.tcp.name') . ' tcp root');
-        Logger::setLogPath(
-            Manager::get('server.logger.info'), Manager::get('server.logger.exception'), Manager::get('server.logger.error'), 
-            Manager::get('server.logger.warning'), Manager::get('server.logger.busi_exception')
-        );
-        Db::setLogDir(Manager::get('server.logger.db'));
-        Monitor::setLogDir(Manager::get('server.logger.monitor'));
+        Logger::setLogPath(Manager::get('server.server.logger_dir'));
+        Db::setLogDir(Manager::get('server.server.logger_dir'));
+        Monitor::setLogDir(Manager::get('server.server.logger_dir'));
     }
 
     /**

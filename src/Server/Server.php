@@ -78,9 +78,9 @@ class Server implements PortInterface
         $this->provider = new ListenerProvider();
         $this->dispatch = new Dispatch($this->provider);
         $this->initAllowEvents()
+            ->initLog()
             ->initServer()
-            ->initCallback()
-            ->initLog();
+            ->initCallback();
 
     }
 
@@ -118,7 +118,7 @@ class Server implements PortInterface
             'max_coroutine' => $this->conf['max_co'],
             'daemonize' => !$this->isRunDocker,
             'pid_file' => $this->conf['pid_file'],
-            'log_file' => $this->conf['log_file'],
+            'log_file' => $this->conf['logger_dir'] . '/server/server.log',
             'event_object' => true,
             'log_rotation' => SWOOLE_LOG_ROTATION_DAILY,
             'log_date_format' => '%Y-%m-%d %H:%M:%S'
@@ -137,7 +137,7 @@ class Server implements PortInterface
      */
     private function initLog() : Server
     {
-        $logDir = dirname($this->conf['log_file']);
+        $logDir = $this->conf['logger_dir'] . '/server';
         if (!is_dir($logDir)) {
             mkdir($logDir, 0777, true);
         }
