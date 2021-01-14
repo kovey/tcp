@@ -13,12 +13,15 @@ namespace Kovey\Tcp\Event;
 
 use Kovey\Event\EventInterface;
 use Kovey\Tcp\Handler\HandlerAbstract;
+use Google\Protobuf\Internal\Message;
 
 class RunHandler implements EventInterface
 {
     private HandlerAbstract $hander;
 
     private string $method;
+
+    private Message $message;
 
     private int $fd;
 
@@ -39,7 +42,12 @@ class RunHandler implements EventInterface
         return $this->packet;
     }
 
-    public function getFd() : string
+    public function getMessage() : Message
+    {
+        return $this->message;
+    }
+
+    public function getFd() : int
     {
         return $this->fd;
     }
@@ -52,6 +60,16 @@ class RunHandler implements EventInterface
     public function getTraceId() : string
     {
         return $this->traceId;
+    }
+
+    public function getHandler() : HandlerAbstract
+    {
+        return $this->hander;
+    }
+
+    public function getMethod() : string
+    {
+        return $this->method;
     }
 
     /**
