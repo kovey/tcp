@@ -211,7 +211,6 @@ class Server implements PortInterface
 
         try {
             $this->dispatch->dispatch(new Event\InitPool($this));
-            call_user_func($this->events['initPool'], $this);
         } catch (\Throwable $e) {
             Logger::writeExceptionLog(__LINE__, __FILE__, $e);
         }
@@ -342,7 +341,7 @@ class Server implements PortInterface
         $err = '';
 
         try {
-            $result = $this->dispatch->dispatchWithReturn(new Event\Handler($packet, $fd, $this->serv->getClientIP($fd), $traceId));
+            $result = $this->dispatch->dispatchWithReturn(new Event\Handler($packet, $fd, $this->getClientIP($fd), $traceId));
             if (empty($result) || !isset($result['message']) || !isset($result['action'])) {
                 return;
             }

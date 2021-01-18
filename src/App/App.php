@@ -326,14 +326,14 @@ class App implements AppInterface
                 if ($keywords['openTransaction']) {
                     $keywords['database']->getConnection()->beginTransaction();
                     try {
-                        $result = call_user_func(array($instance, $method), $message['message'], $event->getFd(), $event->getIp());
+                        $result = call_user_func(array($instance, $method), $message['message'], $event->getFd());
                         $keywords['database']->getConnection()->commit();
                     } catch (\Throwable $e) {
                         $keywords['database']->getConnection()->rollBack();
                         throw $e;
                     }
                 }  else {
-                    $result = call_user_func(array($instance, $method), $message['message'], $event->getFd(), $event->getIp());
+                    $result = call_user_func(array($instance, $method), $message['message'], $event->getFd());
                 }
                 return $result;
             }
@@ -341,14 +341,14 @@ class App implements AppInterface
             if ($keywords['openTransaction']) {
                 $keywords['database']->getConnection()->beginTransaction();
                 try {
-                    $result = $this->dispatch->dispatchWithReturn(new Event\RunHandler($instance, $message['method'], $message['message'], $event->getFd(), $e->getIp()));
+                    $result = $this->dispatch->dispatchWithReturn(new Event\RunHandler($instance, $message['method'], $message['message'], $event->getFd()));
                     $keywords['database']->getConnection()->commit();
                 } catch (\Throwable $e) {
                     $keywords['database']->getConnection()->rollBack();
                     throw $e;
                 }
             } else {
-                $result = $this->dispatch->dispatchWithReturn(new Event\RunHandler($instance, $message['method'], $message['message'], $event->getFd(), $e->getIp()));
+                $result = $this->dispatch->dispatchWithReturn(new Event\RunHandler($instance, $message['method'], $message['message'], $event->getFd()));
             }
             return $result;
         } catch (CloseConnectionException $e) {
@@ -356,24 +356,24 @@ class App implements AppInterface
         } catch (KoveyException $e) {
             $trace = $e->getTraceAsString();
             $err = $e->getMessage();
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $event->getTraceId());
             $monitorType = 'exception';
-            if (isset($this->events['error'])) {
-                $result = call_user_func($this->events['error'], 'exception');
+            if (isset($this->onEvents['error'])) {
+                $result = $this->dispatch->dispatchWithReturn(new Event\Error($e->getMessage()));
             }
             return $result;
         } catch (\Throwable $e) {
             $trace = $e->getTraceAsString();
             $err = $e->getMessage();
-            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $traceId);
+            Logger::writeExceptionLog(__LINE__, __FILE__, $e, $event->getTraceId());
             $monitorType = 'exception';
-            if (isset($this->events['error'])) {
-                $result = call_user_func($this->events['error'], 'throwable exception');
+            if (isset($this->onEvents['error'])) {
+                $result = $this->dispatch->dispatchWithReturn(new Event\Error($e->getMessage()));
             }
             return $result;
         } finally {
             if (!isset($this->config['server']['monitor_open']) || $this->config['server']['monitor_open'] !== 'Off') {
-                $this->sendToMonitor($reqTime, $begin, $ip, $monitorType, $traceId, $message, $result, $trace, $err);
+                $this->sendToMonitor($reqTime, $begin, $event->getIp(), $monitorType, $event->getTraceId(), $message, $result, $trace, $err);
             }
         }
     }
@@ -474,13 +474,7 @@ class App implements AppInterface
     /**
      * @description 进程间通信
      *
-     * @param string $path
-     *
-     * @param string $method
-     *
-     * @param Array $args
-     *
-     * @param string $traceId
+     * @param Event\PipeMessage $event
      *
      * @return null
      */
