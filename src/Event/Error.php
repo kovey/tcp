@@ -42,7 +42,7 @@ class Error implements EventInterface
         return $this;
     }
 
-    public function getError() : string | Throwable
+    public function getError() : string | \Throwable
     {
         return $this->error;
     }

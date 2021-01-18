@@ -25,21 +25,17 @@ class RunHandler implements EventInterface
 
     private int $fd;
 
-    private string $ip;
-
-    private string $traceId;
-
-    public function __construct(ProtocolInterface $packet, int $fd, string $ip, string $traceId)
+    public function __construct(HandlerAbstract $hander, string $method, Message $message, int $fd)
     {
-        $this->packet = $packet;
+        $this->hander = $hander;
         $this->fd = $fd;
-        $this->ip = $ip;
-        $this->traceId = $traceId;
+        $this->method = $method;
+        $this->message = $message;
     }
 
-    public function getPacket() : ProtocolInterface
+    public function getHandler() : HandlerAbstract
     {
-        return $this->packet;
+        return $this->hander;
     }
 
     public function getMessage() : Message
@@ -50,21 +46,6 @@ class RunHandler implements EventInterface
     public function getFd() : int
     {
         return $this->fd;
-    }
-
-    public function getIp() : string
-    {
-        return $this->ip;
-    }
-
-    public function getTraceId() : string
-    {
-        return $this->traceId;
-    }
-
-    public function getHandler() : HandlerAbstract
-    {
-        return $this->hander;
     }
 
     public function getMethod() : string
