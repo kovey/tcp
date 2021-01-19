@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @description 整个运用启动前的初始化
+ * @description bootstrap
  *
  * @package     App\Bootstrap
  *
@@ -24,13 +24,13 @@ use Kovey\Process\UserProcess;
 class Bootstrap
 {
     /**
-     * @description 初始化日志
+     * @description init logger
      *
      * @param App $app
      *
-     * @return null
+     * @return void
      */
-    public function __initLogger(App $app)
+    public function __initLogger(App $app) : void
     {
         ko_change_process_name(Manager::get('server.tcp.name') . ' tcp root');
         Logger::setLogPath(Manager::get('server.server.logger_dir'));
@@ -39,13 +39,13 @@ class Bootstrap
     }
 
     /**
-     * @description 初始化APP
+     * @description init app
      *
      * @param App $app
      *
-     * @return null
+     * @return void
      */
-    public function __initApp(App $app)
+    public function __initApp(App $app) : void
     {
         $app->registerServer(new Server($app->getConfig()['server']))
             ->registerContainer(new Container())
@@ -53,25 +53,25 @@ class Bootstrap
     }
 
     /**
-     * @description 初始化自定义进程
+     * @description init process
      *
      * @param App $app
      *
-     * @return null
+     * @return void
      */
-    public function __initProcess(App $app)
+    public function __initProcess(App $app) : void
     {
         $app->registerProcess('kovey_config', (new Process\Config())->setProcessName(Manager::get('server.tcp.name') . ' config'));
     }
 
     /**
-     * @description 初始化自定义的Bootsrap
+     * @description init custom bootstrap
      *
      * @param App $app
      *
-     * @return null
+     * @return void
      */
-    public function __initCustomBoot(App $app)
+    public function __initCustomBoot(App $app) : void
     {
         $bootstrap = $app->getConfig()['tcp']['boot'] ?? 'application/Bootstrap.php';
         $file = APPLICATION_PATH . '/' . $bootstrap;
@@ -84,7 +84,14 @@ class Bootstrap
         $app->registerCustomBootstrap(new \Bootstrap());
     }
 
-    public function __initParseInject(App $app)
+    /**
+     * @description init parse inject
+     *
+     * @param App $app
+     *
+     * @return void
+     */
+    public function __initParseInject(App $app) : void
     {
         $app->registerLocalLibPath(APPLICATION_PATH . '/application');
 

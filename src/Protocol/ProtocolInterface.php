@@ -1,6 +1,6 @@
 <?php
 /**
- * @description
+ * @description protocol interface
  *
  * @package
  *
@@ -14,42 +14,42 @@ namespace Kovey\Tcp\Protocol;
 interface ProtocolInterface
 {
     /**
-     * @description 打包类型
+     * @description pack type
      *
      * @var string
      */
     const PACK_TYPE = 'N';
 
     /**
-     * @description 包头长度
+     * @description header length
      *
      * @var int
      */
     const HEADER_LENGTH = 8;
 
     /**
-     * @description 包最大长度
+     * @description max length
      *
      * @var int
      */
     const MAX_LENGTH = 2097152;
 
     /**
-     * @description 包长度所在位置
+     * @description length offset
      *
      * @var int
      */
     const LENGTH_OFFSET = 4;
 
     /**
-     * @description 包体开始位置
+     * @description body offset
      *
      * @var int
      */
     const BODY_OFFSET = 8;
 
     /**
-     * @description 构造函数
+     * @description construct
      *
      * @param string $body
      *
@@ -60,14 +60,14 @@ interface ProtocolInterface
     public function __construct(string $body, int $action);
 
     /**
-     * @description 获取路径
+     * @description get message
      *
      * @return string
      */
     public function getMessage() : string;
 
     /**
-     * @description 获取协议号
+     * @description get action
      *
      * @return int
      */

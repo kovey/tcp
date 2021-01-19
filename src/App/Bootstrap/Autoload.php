@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @description 自动加载管理
+ * @description autoload manager
  *
  * @package     App\Bootstrap
  *
@@ -14,21 +14,21 @@ namespace Kovey\Tcp\App\Bootstrap;
 class Autoload
 {
     /**
-     * @description 自定义的加载路径
+     * @description custom auto path
      *
      * @var Array
      */
     private Array $customs;
 
     /**
-     * @description 库目录
+     * @description library path
      *
      * @var string
      */
     private string $library;
 
     /**
-     * @description 构造函数
+     * @description construct
      *
      * @return Autoload
      */
@@ -40,24 +40,25 @@ class Autoload
     }
 
     /**
-     * @description 注册自动加载的路径
+     * @description register
      *
-     * @return null
+     * @return Autoload
      */
-    public function register()
+    public function register() : Autoload
     {
         spl_autoload_register(array($this, 'autoloadUserLib'));
         spl_autoload_register(array($this, 'autoloadLocal'));
+        return $this;
     }
 
     /**
-     * @description 用户库目录
+     * @description user library
      *
      * @param string $className
      *
-     * @return null
+     * @return void
      */
-    public function autoloadUserLib(string $className)
+    public function autoloadUserLib(string $className) : void
     {
         try {
             $className = $this->library . str_replace('\\', '/', $className) . '.php';
@@ -73,13 +74,13 @@ class Autoload
     }
 
     /**
-     * @description 自定义加载路径
+     * @description custom library
      *
      * @param string $className
      *
-     * @return null
+     * @return void
      */
-    public function autoloadLocal(string $className)
+    public function autoloadLocal(string $className) : void
     {
         foreach ($this->customs as $path) {
             try {
@@ -97,7 +98,7 @@ class Autoload
     }
 
     /**
-     * @description 添加自定义加载路径
+     * @description add local path
      *
      * @param string $path
      *

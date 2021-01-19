@@ -1,6 +1,6 @@
 <?php
 /**
- * @description
+ * @description protobuf interface
  *
  * @package
  *
@@ -16,7 +16,7 @@ use Google\Protobuf\Internal\Message;
 interface ProtobufInterface
 {
     /**
-     * @description 获取消息
+     * @description get message
      *
      * @return Message
      */
