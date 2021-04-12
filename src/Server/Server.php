@@ -37,9 +37,9 @@ class Server extends ServerAbstract
      *
      * @return Server
      */
-    private function initServer()
+    protected function initServer()
     {
-        $this->serv = new \Swoole\Server($this->config['host'], $this->conf['port']);
+        $this->serv = new \Swoole\Server($this->config['host'], $this->config['port']);
         $this->serv->set(array(
             'open_length_check' => true,
             'package_max_length' => ProtocolInterface::MAX_LENGTH,
@@ -69,7 +69,7 @@ class Server extends ServerAbstract
      *
      * @return Server
      */
-    private function initAllowEvents()
+    protected function initAllowEvents()
     {
         $this->event->addSupportEvents(array(
             'handler' => Event\Handler::class,

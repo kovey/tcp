@@ -18,6 +18,7 @@ use Kovey\Rpc\Work\Handler;
 use Kovey\Tcp\App\Router\RouterInterface;
 use Kovey\Tcp\App\Router\RoutersInterface;
 use Kovey\Library\Exception\KoveyException;
+use Kovey\Tcp\App\Bootstrap;
 
 class App extends AA
 {
@@ -51,7 +52,10 @@ class App extends AA
 
     protected function init() : App
     {
-        $this->bootstrap->add(new BaseInit());
+        $this->bootstrap
+             ->add(new Bootstrap\BaseInit())
+             ->add(new Bootstrap\RouterInit());
+
         $this->event->addSupportEvents(array(
             'run_handler' => Event\RunHandler::class,
             'error' => Event\Error::class,
@@ -61,9 +65,9 @@ class App extends AA
         return $this;
     }
 
-    protected function initWork() : AppBase
+    protected function initWork() : App
     {
-        $this->work = new Handler($this->config['rpc']['handler']);
+        $this->work = new Handler($this->config['tcp']['handler']);
         $this->work->setEventManager($this->event);
         return $this;
     }
@@ -75,7 +79,7 @@ class App extends AA
      *
      * @return App
      */
-    public function registerServer(Server $server) : App
+    public function registerServer(ServerInterface $server) : App
     {
         $this->server = $server;
         $this->server
