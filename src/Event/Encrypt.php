@@ -12,20 +12,20 @@
 namespace Kovey\Tcp\Event;
 
 use Kovey\Event\EventInterface;
-use Kovey\Tcp\Server\Server;
+use Google\Protobuf\Internal\Message;
 
-class InitPool implements EventInterface
+class Encrypt implements EventInterface
 {
-    private Server $server;
+    private Message $packet;
 
-    public function __construct(Server $server)
+    public function __construct(Message $packet)
     {
-        $this->server = $server;
+        $this->packet = $packet;
     }
 
-    public function getServer() : Server
+    public function getMessage() :  Message
     {
-        return $this->server;
+        return $this->packet;
     }
 
     /**
