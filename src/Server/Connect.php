@@ -33,5 +33,7 @@ class Connect
             $serv->close($fd);
             Logger::writeExceptionLog(__LINE__, __FILE__, $e);
         }
+
+        return $this;
     }
 }

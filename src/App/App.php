@@ -14,7 +14,7 @@ use Kovey\Tcp\Server\Server;
 use Kovey\Tcp\Event;
 use Kovey\App\App as AA;
 use Kovey\App\Components\ServerInterface;
-use Kovey\Rpc\Work\Handler;
+use Kovey\Tcp\Work\Handler;
 use Kovey\Tcp\App\Router\RouterInterface;
 use Kovey\Tcp\App\Router\RoutersInterface;
 use Kovey\Library\Exception\KoveyException;
@@ -67,7 +67,7 @@ class App extends AA
 
     protected function initWork() : App
     {
-        $this->work = new Handler($this->config['tcp']['handler']);
+        $this->work = new Handler();
         $this->work->setEventManager($this->event);
         return $this;
     }
@@ -202,7 +202,7 @@ class App extends AA
      *
      * @return Application
      */
-    public function registerRouters(RoutersInterface $routers) : Application
+    public function registerRouters(RoutersInterface $routers) : App
     {
         $this->work->setRouters($routers);
         return $this;

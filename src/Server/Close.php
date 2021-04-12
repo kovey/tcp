@@ -17,7 +17,7 @@ use Kovey\Event\EventManager;
 
 class Close
 {
-    public function close(Server $server, EventManager $event, int $fd) : Connect
+    public function close(Server $server, EventManager $event, int $fd) : Close
     {
         try {
             $event->dispatch(new Event\Close($server, $fd));

@@ -53,12 +53,12 @@ class Receive
         $this->service = $service;
     }
 
-    public function begin() : Business
+    public function begin() : Receive
     {
         $this->begin = microtime(true);
         $this->reqTime = time();
         $this->result = array();
-        $this->traceId = hash('sha256', uniqid($fd, true) . random_int(1000000, 9999999));
+        $this->traceId = hash('sha256', uniqid($this->fd, true) . random_int(1000000, 9999999));
         $this->trace = '';
         $this->err = '';
         $this->type = 'success';
@@ -67,7 +67,7 @@ class Receive
         return $this;
     }
 
-    public function run(EventManager $event, \Swoole\Server $serv) : Business
+    public function run(EventManager $event, \Swoole\Server $serv) : Receive
     {
         try {
             $proto = $event->dispatchWithReturn(new Event\Unpack($this->packet));
@@ -82,6 +82,8 @@ class Receive
         } catch (CloseConnectionException $e) {
             $serv->close($fd);
             $this->type = 'connection_close_exception';
+            $this->trace = $e->getTraceAsString();
+            $this->err = $e->getMessage();
             Logger::writeExceptionLog(__LINE__, __FILE__, $e, $this->traceId);
         } catch (BusiException | KoveyException $e) {
             $this->trace = $e->getTraceAsString();
@@ -103,7 +105,7 @@ class Receive
         return $this;
     }
 
-    public function end(Server $server) : Business
+    public function end(Server $server) : Receive
     {
         if (empty($this->result) || !isset($this->result['message']) || !isset($this->result['action'])) {
             return $this;
@@ -119,7 +121,7 @@ class Receive
         return $this;
     }
 
-    public function monitor(Server $server) : Business
+    public function monitor(Server $server) : Receive
     {
         if (!empty($this->result['message'])) {
             if ($this->result['message'] instanceof Message) {
@@ -149,7 +151,7 @@ class Receive
             'end' => $end * 10000,
             'trace' => $this->trace,
             'err' => $this->err
-        ));
+        ), $this->traceId);
 
         return $this;
     }

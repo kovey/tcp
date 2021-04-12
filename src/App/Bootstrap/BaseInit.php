@@ -13,6 +13,7 @@ namespace Kovey\Tcp\App\Bootstrap;
 
 use Kovey\Tcp\App\App;
 use Kovey\Tcp\Server\Server;
+use Kovey\Tcp\App\Router\Routers;
 
 class BaseInit
 {
@@ -25,6 +26,7 @@ class BaseInit
      */
     public function __initApp(App $app) : void
     {
-        $app->registerServer(new Server($app->getConfig()['server']));
+        $app->registerServer(new Server($app->getConfig()['server']))
+            ->registerRouters(new Routers());
     }
 }

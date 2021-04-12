@@ -15,5 +15,5 @@ interface RoutersInterface
 {
     public function addRouter(int | string $code, RouterInterface $router) : RoutersInterface;
 
-    public function getRouter(int | string $code) : RouterInterface;
+    public function getRouter(int | string $code) : ?RouterInterface;
 }

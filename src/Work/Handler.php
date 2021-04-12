@@ -13,23 +13,17 @@ namespace Kovey\Tcp\Work;
 
 use Kovey\App\Components\Work;
 use Kovey\Event\EventInterface;
-use Kovey\Rpc\Handler\HandlerAbstract;
+use Kovey\Tcp\Handler\HandlerAbstract;
 use Kovey\Connection\ManualCollectInterface;
 use Google\Protobuf\Internal\Message;
 use Kovey\Library\Exception\CloseConnectionException;
 use Kovey\Tcp\App\Router\RouterInterface;
 use Kovey\Tcp\App\Router\RoutersInterface;
+use Kovey\Tcp\Event;
 
 class Handler extends Work
 {
-    private string $handler;
-
     private RoutersInterface $routers;
-
-    public function __construct(string $handler)
-    {
-        $this->handler = $handler;
-    }
 
     public function setRouters(RoutersInterface $routers) : Handler
     {
@@ -47,7 +41,7 @@ class Handler extends Work
     {
         $router = $this->routers->getRouter($event->getPacket()->getAction());
         if (empty($router)) {
-            throw CloseConnectionException('protocol number is error', 1000);
+            throw new CloseConnectionException('protocol number is error', 1000);
         }
         $baseClass = $router->getProtobufBase();
         $class = $router->getProtobuf();
@@ -64,8 +58,8 @@ class Handler extends Work
             $protobuf->mergeFromString($event->getPacket()->getMessage());
         }
 
-        $class = $this->handler . '\\' . $event->getHandler();
-        $keywords = $this->container->getKeywords($class, $event->getMethod());
+        $class = $router->getHandler();
+        $keywords = $this->container->getKeywords($class, $router->getMethod());
         try {
             $instance = $this->container->get($class, $event->getTraceId(), $keywords['ext']);
             if (!$instance instanceof HandlerAbstract) {
@@ -77,22 +71,22 @@ class Handler extends Work
             if ($keywords['openTransaction']) {
                 $instance->database->beginTransaction();
                 try {
-                    $result = $this->triggerHandler($instance, $event->getMethod(), $protobuf, $event->getFd());
+                    $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd());
                     $instance->database->commit();
                 } catch (\Throwable $e) {
                     $instance->database->rollBack();
                     throw $e;
                 }
             } else {
-                $result = $this->triggerHandler($instance, $event->getMethod(), $protobuf, $event->getFd());
+                $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd());
             }
 
             if (empty($result)) {
                 $result = array();
             }
 
-            $result['class'] = $event->getHandler();
-            $result['method'] = $event->getMethod();
+            $result['class'] = $router->getHandler();
+            $result['method'] = $router->getMethod();
             $result['params'] = $protobuf->serializeToJsonString();
 
             return $result;
@@ -101,8 +95,10 @@ class Handler extends Work
         } finally {
             foreach ($keywords as $value) {
                 if (!$value instanceof ManualCollectInterface) {
-                    $value->collect();
+                    continue;
                 }
+
+                $value->collect();
             }
         }
     }
@@ -110,7 +106,7 @@ class Handler extends Work
     private function triggerHandler(HandlerAbstract $instance, string $method, Message $message, int $fd) : Array
     {
         if ($this->event->listened('run_handler')) {
-            return $this->dispatch->dispatchWithReturn(new Event\RunHandler($instance, $method, $message, $fd));
+            return $this->event->dispatchWithReturn(new Event\RunHandler($instance, $method, $message, $fd));
         }
 
         return call_user_func(array($instance, $method), $message, $fd);

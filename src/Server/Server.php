@@ -135,14 +135,14 @@ class Server extends ServerAbstract
         }
 
         $len = strlen($data);
-        if ($len <= self::PACKET_MAX_LENGTH) {
+        if ($len <= ProtocolInterface::MAX_LENGTH) {
             return $this->serv->send($fd, $data);
         }
 
         $sendLen = 0;
         while ($sendLen < $len) {
-            $this->serv->send($fd, substr($data, $sendLen, self::PACKET_MAX_LENGTH));
-            $sendLen += self::PACKET_MAX_LENGTH;
+            $this->serv->send($fd, substr($data, $sendLen, ProtocolInterface::MAX_LENGTH));
+            $sendLen += ProtocolInterface::MAX_LENGTH;
         }
 
         return true;
