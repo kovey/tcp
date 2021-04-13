@@ -18,6 +18,7 @@ use Kovey\Tcp\Event;
 use Kovey\Logger\Logger;
 use Kovey\Tcp\Protocol\ProtocolInterface;
 use Kovey\Event\EventManager;
+use Google\Protobuf\Internal\Message;
 
 class Receive
 {
@@ -137,6 +138,7 @@ class Receive
             'delay' => round(($end - $this->begin) * 1000, 2),
             'request_time' => $this->begin * 10000,
             'action' => $this->action,
+            'res_action' => $this->result['action'] ?? 0,
             'class' => $this->result['class'] ?? '',
             'method' => $this->result['method'] ?? '',
             'service' => $this->service,
