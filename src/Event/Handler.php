@@ -24,12 +24,15 @@ class Handler implements EventInterface
 
     private string $traceId;
 
-    public function __construct(ProtocolInterface $packet, int $fd, string $ip, string $traceId)
+    private string $spanId;
+
+    public function __construct(ProtocolInterface $packet, int $fd, string $ip, string $traceId, string $spanId)
     {
         $this->packet = $packet;
         $this->fd = $fd;
         $this->ip = $ip;
         $this->traceId = $traceId;
+        $this->spanId = $spanId;
     }
 
     public function getPacket() : ProtocolInterface
@@ -50,6 +53,11 @@ class Handler implements EventInterface
     public function getTraceId() : string
     {
         return $this->traceId;
+    }
+
+    public function getSpanId() : string
+    {
+        return $this->spanId;
     }
 
     /**

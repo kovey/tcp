@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0d8313cd00e76b3b64efcc9f8b0b0be",
+    "content-hash": "781c79e32811510bc0813f70cc382b9f",
     "packages": [
         {
             "name": "kovey/app",
-            "version": "v1.0.5",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/app.git",
-                "reference": "46767a42802060115fe33373d097a620e2c2ab85"
+                "reference": "24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/app/zipball/46767a42802060115fe33373d097a620e2c2ab85",
-                "reference": "46767a42802060115fe33373d097a620e2c2ab85",
+                "url": "https://api.github.com/repos/kovey/app/zipball/24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4",
+                "reference": "24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -28,7 +28,7 @@
             },
             "require": {
                 "kovey/connection": "^1.1.1",
-                "kovey/container": "^1.0",
+                "kovey/container": "^2.0",
                 "kovey/event": "^1.0.2",
                 "kovey/process": "^1.0",
                 "kovey/sharding": "^1.0",
@@ -61,7 +61,7 @@
                 "kovey",
                 "php"
             ],
-            "time": "2021-04-07T06:52:42+00:00"
+            "time": "2021-04-13T04:35:34+00:00"
         },
         {
             "name": "kovey/connection",
@@ -120,16 +120,16 @@
         },
         {
             "name": "kovey/container",
-            "version": "v1.1.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/container.git",
-                "reference": "00ee5d14250c903997eab80953d9ee5f95727151"
+                "reference": "4b3bd6b62eab1f24120f60bf51f77ffafaeca734"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/container/zipball/00ee5d14250c903997eab80953d9ee5f95727151",
-                "reference": "00ee5d14250c903997eab80953d9ee5f95727151",
+                "url": "https://api.github.com/repos/kovey/container/zipball/4b3bd6b62eab1f24120f60bf51f77ffafaeca734",
+                "reference": "4b3bd6b62eab1f24120f60bf51f77ffafaeca734",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -170,7 +170,7 @@
                 "kovey",
                 "php"
             ],
-            "time": "2021-03-22T05:37:06+00:00"
+            "time": "2021-04-13T04:01:36+00:00"
         },
         {
             "name": "kovey/db",
@@ -335,16 +335,16 @@
         },
         {
             "name": "kovey/logger",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/logger.git",
-                "reference": "2ae58fc1987e4c8ef8e7ac2dad83b2445ff8df72"
+                "reference": "db48f62ae8c72f9527816d641ded5d7daf341017"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/logger/zipball/2ae58fc1987e4c8ef8e7ac2dad83b2445ff8df72",
-                "reference": "2ae58fc1987e4c8ef8e7ac2dad83b2445ff8df72",
+                "url": "https://api.github.com/repos/kovey/logger/zipball/db48f62ae8c72f9527816d641ded5d7daf341017",
+                "reference": "db48f62ae8c72f9527816d641ded5d7daf341017",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -384,20 +384,20 @@
                 "logger",
                 "php"
             ],
-            "time": "2021-01-13T04:01:11+00:00"
+            "time": "2021-04-12T15:31:42+00:00"
         },
         {
             "name": "kovey/process",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/process.git",
-                "reference": "3320e4473c8b34c94aae11e52b13d05db5274bff"
+                "reference": "14bb1691a9e46fd28d8e5b69635d85f40e87ef2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/process/zipball/3320e4473c8b34c94aae11e52b13d05db5274bff",
-                "reference": "3320e4473c8b34c94aae11e52b13d05db5274bff",
+                "url": "https://api.github.com/repos/kovey/process/zipball/14bb1691a9e46fd28d8e5b69635d85f40e87ef2a",
+                "reference": "14bb1691a9e46fd28d8e5b69635d85f40e87ef2a",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -439,7 +439,7 @@
                 "php",
                 "process"
             ],
-            "time": "2021-01-19T05:07:12+00:00"
+            "time": "2021-04-13T05:16:22+00:00"
         },
         {
             "name": "kovey/redis",
@@ -497,16 +497,16 @@
         },
         {
             "name": "kovey/rpc-client",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/rpc-client.git",
-                "reference": "fcc64660052ad4f417203fd535e21a98216273e5"
+                "reference": "c0e3e55a96f57eeb5193a31145c10d357f76a0e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/rpc-client/zipball/fcc64660052ad4f417203fd535e21a98216273e5",
-                "reference": "fcc64660052ad4f417203fd535e21a98216273e5",
+                "url": "https://api.github.com/repos/kovey/rpc-client/zipball/c0e3e55a96f57eeb5193a31145c10d357f76a0e0",
+                "reference": "c0e3e55a96f57eeb5193a31145c10d357f76a0e0",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -549,7 +549,7 @@
                 "php",
                 "rpc"
             ],
-            "time": "2021-01-09T05:54:19+00:00"
+            "time": "2021-04-13T05:20:17+00:00"
         },
         {
             "name": "kovey/sharding",

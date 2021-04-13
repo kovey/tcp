@@ -45,6 +45,8 @@ class Receive
 
     private string $type;
 
+    private string $spanId;
+
     public function __construct(string $packet, string $ip, int $fd, string $service)
     {
         $this->packet = $packet;
@@ -63,6 +65,7 @@ class Receive
         $this->err = '';
         $this->type = 'success';
         $this->action = 0;
+        $this->spanId = md5($this->fd . microtime(true));
 
         return $this;
     }
@@ -78,7 +81,7 @@ class Receive
             }
 
             $this->action = $proto->getAction();
-            $this->result = $event->dispatchWithReturn(new Event\Handler($proto, $this->fd, $this->ip, $this->traceId));
+            $this->result = $event->dispatchWithReturn(new Event\Handler($proto, $this->fd, $this->ip, $this->traceId, $this->spanId));
         } catch (CloseConnectionException $e) {
             $serv->close($fd);
             $this->type = 'connection_close_exception';
@@ -150,7 +153,9 @@ class Receive
             'from' => $this->service,
             'end' => $end * 10000,
             'trace' => $this->trace,
-            'err' => $this->err
+            'err' => $this->err,
+            'parentId' => 'root',
+            'spanId' => $this->spanId
         ), $this->traceId);
 
         return $this;

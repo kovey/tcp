@@ -61,7 +61,7 @@ class Handler extends Work
         $class = $router->getHandler();
         $keywords = $this->container->getKeywords($class, $router->getMethod());
         try {
-            $instance = $this->container->get($class, $event->getTraceId(), $keywords['ext']);
+            $instance = $this->container->get($class, $event->getTraceId(), $event->getSpanId(), $keywords['ext']);
             if (!$instance instanceof HandlerAbstract) {
                 throw new CloseConnectionException("$class is not implements HandlerAbstract");
             }
