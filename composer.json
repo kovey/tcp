@@ -21,6 +21,7 @@
         "ext-swoole": "^4.6.0",
         "kovey/library": "^2.1",
         "kovey/connection": "^1.1",
+        "ext-protobuf": "^3.13.0",
         "kovey/logger": "^2.0",
         "kovey/event": "^1.0",
         "kovey/process": "^1.0",
