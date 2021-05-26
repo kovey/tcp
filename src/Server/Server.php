@@ -42,10 +42,10 @@ class Server extends ServerAbstract
         $this->serv = new \Swoole\Server($this->config['host'], $this->config['port']);
         $this->serv->set(array(
             'open_length_check' => true,
-            'package_max_length' => ProtocolInterface::MAX_LENGTH,
-            'package_length_type' => ProtocolInterface::PACK_TYPE,
-            'package_length_offset' => ProtocolInterface::LENGTH_OFFSET,
-            'package_body_offset' => ProtocolInterface::BODY_OFFSET,
+            'package_max_length' => $this->config['package_max_length'] ?? ProtocolInterface::MAX_LENGTH,
+            'package_length_type' => $this->config['package_length_type'] ?? ProtocolInterface::PACK_TYPE,
+            'package_length_offset' => $this->config['package_length_offset'] ?? ProtocolInterface::LENGTH_OFFSET,
+            'package_body_offset' => $this->config['package_body_offset'] ?? ProtocolInterface::BODY_OFFSET,
             'enable_coroutine' => true,
             'worker_num' => $this->config['worker_num'],
             'max_coroutine' => $this->config['max_co'],
