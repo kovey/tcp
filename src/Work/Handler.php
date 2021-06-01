@@ -47,6 +47,7 @@ class Handler extends Work
         $class = $router->getProtobuf();
         $protobuf = new $class();
 
+        $base = null;
         if (!empty($baseClass)) {
             $base = new $baseClass();
             $base->mergeFromString($event->getPacket()->getMessage());
@@ -71,14 +72,14 @@ class Handler extends Work
             if ($keywords['openTransaction']) {
                 $instance->database->beginTransaction();
                 try {
-                    $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd());
+                    $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd(), $base);
                     $instance->database->commit();
                 } catch (\Throwable $e) {
                     $instance->database->rollBack();
                     throw $e;
                 }
             } else {
-                $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd());
+                $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd(), $base);
             }
 
             if (empty($result)) {
@@ -103,12 +104,12 @@ class Handler extends Work
         }
     }
 
-    private function triggerHandler(HandlerAbstract $instance, string $method, Message $message, int $fd) : Array
+    private function triggerHandler(HandlerAbstract $instance, string $method, Message $message, int $fd, ?Message $base) : Array
     {
         if ($this->event->listened('run_handler')) {
-            return $this->event->dispatchWithReturn(new Event\RunHandler($instance, $method, $message, $fd));
+            return $this->event->dispatchWithReturn(new Event\RunHandler($instance, $method, $message, $fd, $base));
         }
 
-        return call_user_func(array($instance, $method), $message, $fd);
+        return call_user_func(array($instance, $method), $message, $fd, $base);
     }
 }
