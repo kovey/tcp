@@ -84,7 +84,7 @@ class Receive
             $this->action = $proto->getAction();
             $this->result = $event->dispatchWithReturn(new Event\Handler($proto, $this->fd, $this->ip, $this->traceId, $this->spanId));
         } catch (CloseConnectionException $e) {
-            $serv->close($fd);
+            $serv->close($this->fd);
             $this->type = 'connection_close_exception';
             $this->trace = $e->getTraceAsString();
             $this->err = $e->getMessage();
