@@ -14,6 +14,7 @@ namespace Kovey\Tcp\Server;
 use Kovey\Tcp\Protocol\ProtocolInterface;
 use Kovey\Tcp\Event;
 use Kovey\App\Components\ServerAbstract;
+use Kovey\Library\Exception\CloseConnectionException;
 
 class Server extends ServerAbstract
 {
