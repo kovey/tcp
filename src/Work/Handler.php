@@ -20,6 +20,7 @@ use Kovey\Library\Exception\CloseConnectionException;
 use Kovey\Tcp\App\Router\RouterInterface;
 use Kovey\Tcp\App\Router\RoutersInterface;
 use Kovey\Tcp\Event;
+use Kovey\Logger\Logger;
 
 class Handler extends Work
 {
@@ -76,6 +77,13 @@ class Handler extends Work
                     $instance->database->commit();
                 } catch (\Throwable $e) {
                     $instance->database->rollBack();
+                    Logger::writeErrorLog(__LINE__, __FILE__, array(
+                        'class' => $router->getHandler(),
+                        'method' => $router->getMethod(),
+                        'params' => $protobuf->serializeToJsonString(),
+                        'error' => $e->getMessage(),
+                        'base' => empty($base) ? '' : $base->serializeToJsonString()
+                    ));
                     throw $e;
                 }
             } else {
@@ -89,9 +97,17 @@ class Handler extends Work
             $result['class'] = $router->getHandler();
             $result['method'] = $router->getMethod();
             $result['params'] = $protobuf->serializeToJsonString();
+            $result['base'] = empty($base) ? '' : $base->serializeToJsonString();
 
             return $result;
         } catch (\Throwable $e) {
+            Logger::writeErrorLog(__LINE__, __FILE__, array(
+                'class' => $router->getHandler(),
+                'method' => $router->getMethod(),
+                'params' => $protobuf->serializeToJsonString(),
+                'error' => $e->getMessage(),
+                'base' => empty($base) ? '' : $base->serializeToJsonString()
+            ));
             throw $e;
         } finally {
             foreach ($keywords as $value) {

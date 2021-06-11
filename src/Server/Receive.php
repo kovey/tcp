@@ -147,6 +147,7 @@ class Receive
             'type' => $this->type,
             'params' => $this->result['params'] ?? '',
             'response' => $this->result['message'] ?? '',
+            'base' => $this->result['base'] ?? '',
             'ip' => $this->ip,
             'time' => $this->reqTime,
             'timestamp' => date('Y-m-d H:i:s', $this->reqTime),
