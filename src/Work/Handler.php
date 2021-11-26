@@ -21,6 +21,7 @@ use Kovey\Tcp\App\Router\RouterInterface;
 use Kovey\Tcp\App\Router\RoutersInterface;
 use Kovey\Tcp\Event;
 use Kovey\Logger\Logger;
+use Kovey\Container\Keyword\Fields;
 
 class Handler extends Work
 {
@@ -70,13 +71,13 @@ class Handler extends Work
 
             $instance->setClientIp($event->getIp());
 
-            if ($keywords['openTransaction']) {
-                $instance->database->beginTransaction();
+            if ($keywords[Fields::KEYWORD_OPEN_TRANSACTION]) {
+                $keywords[Fields::KEYWORD_DATABASE]->beginTransaction();
                 try {
                     $result = $this->triggerHandler($instance, $router->getMethod(), $protobuf, $event->getFd(), $base, $event);
-                    $instance->database->commit();
+                    $keywords[Fields::KEYWORD_DATABASE]->commit();
                 } catch (\Throwable $e) {
-                    $instance->database->rollBack();
+                    $keywords[Fields::KEYWORD_DATABASE]->rollBack();
                     Logger::writeErrorLog(__LINE__, __FILE__, array(
                         'class' => $router->getHandler(),
                         'method' => $router->getMethod(),
