@@ -158,7 +158,8 @@ class Receive
             'trace' => $this->trace,
             'err' => $this->err,
             'parentId' => 'root',
-            'spanId' => $this->spanId
+            'spanId' => $this->spanId,
+            'fd' => $this->fd
         ), $this->traceId);
 
         return $this;
