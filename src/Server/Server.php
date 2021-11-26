@@ -36,7 +36,7 @@ class Server extends ServerAbstract
     /**
      * @description 初始化服务
      *
-     * @return Server
+     * @return void
      */
     protected function initServer()
     {
@@ -68,9 +68,9 @@ class Server extends ServerAbstract
     /**
      * @description init events support
      *
-     * @return Server
+     * @return void
      */
-    protected function initAllowEvents()
+    protected function initAllowEvents() : void
     {
         $this->event->addSupportEvents(array(
             'handler' => Event\Handler::class,

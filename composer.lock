@@ -4,27 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "781c79e32811510bc0813f70cc382b9f",
+    "content-hash": "c147b1edf4247b287e778faf112f9d1f",
     "packages": [
         {
             "name": "kovey/app",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/app.git",
-                "reference": "24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4"
+                "reference": "ffa9d927b15763a776d7285ef7a5ab53d9ccf2a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/app/zipball/24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4",
-                "reference": "24ca9bf9a6f0eefa823dd543b5bae6eb653fddb4",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/app/zipball/ffa9d927b15763a776d7285ef7a5ab53d9ccf2a5",
+                "reference": "ffa9d927b15763a776d7285ef7a5ab53d9ccf2a5",
+                "shasum": ""
             },
             "require": {
                 "kovey/connection": "^1.1.1",
@@ -35,6 +29,7 @@
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -61,27 +56,25 @@
                 "kovey",
                 "php"
             ],
-            "time": "2021-04-13T04:35:34+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/app/issues",
+                "source": "https://github.com/kovey/app/tree/v2.1.0"
+            },
+            "time": "2021-11-25T12:11:05+00:00"
         },
         {
             "name": "kovey/connection",
-            "version": "v1.1.2",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/connection.git",
-                "reference": "5e44266ce8b3e210be8798576d2b1c5d311e96b9"
+                "reference": "3fffd14b33d5562a66776088d83eac083878138e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/connection/zipball/5e44266ce8b3e210be8798576d2b1c5d311e96b9",
-                "reference": "5e44266ce8b3e210be8798576d2b1c5d311e96b9",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/connection/zipball/3fffd14b33d5562a66776088d83eac083878138e",
+                "reference": "3fffd14b33d5562a66776088d83eac083878138e",
+                "shasum": ""
             },
             "require": {
                 "kovey/db": "^1.1",
@@ -89,6 +82,7 @@
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -116,34 +110,34 @@
                 "php",
                 "pool"
             ],
-            "time": "2021-04-11T14:38:02+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/connection/issues",
+                "source": "https://github.com/kovey/connection/tree/v1.2.0"
+            },
+            "time": "2021-11-25T11:45:30+00:00"
         },
         {
             "name": "kovey/container",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/container.git",
-                "reference": "4b3bd6b62eab1f24120f60bf51f77ffafaeca734"
+                "reference": "54d182c20f6da9b310ada6bf9c5e660fb4f7f32e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/container/zipball/4b3bd6b62eab1f24120f60bf51f77ffafaeca734",
-                "reference": "4b3bd6b62eab1f24120f60bf51f77ffafaeca734",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/container/zipball/54d182c20f6da9b310ada6bf9c5e660fb4f7f32e",
+                "reference": "54d182c20f6da9b310ada6bf9c5e660fb4f7f32e",
+                "shasum": ""
             },
             "require": {
                 "kovey/event": "^1.0",
+                "kovey/library": "^2.0",
                 "kovey/validator": "^1.0",
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -170,33 +164,33 @@
                 "kovey",
                 "php"
             ],
-            "time": "2021-04-13T04:01:36+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/container/issues",
+                "source": "https://github.com/kovey/container/tree/v2.1.0"
+            },
+            "time": "2021-11-25T12:09:55+00:00"
         },
         {
             "name": "kovey/db",
-            "version": "v1.1.0",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/db.git",
-                "reference": "47e28f0b339f627abe7ece53b276919b9df94daa"
+                "reference": "0a53a59486f6865d2956b50c63de93a80bbb2e53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/db/zipball/47e28f0b339f627abe7ece53b276919b9df94daa",
-                "reference": "47e28f0b339f627abe7ece53b276919b9df94daa",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/db/zipball/0a53a59486f6865d2956b50c63de93a80bbb2e53",
+                "reference": "0a53a59486f6865d2956b50c63de93a80bbb2e53",
+                "shasum": ""
             },
             "require": {
+                "kovey/library": "^2.0",
                 "kovey/logger": "^1.0 | ^2.0",
-                "php": ">=8.0"
+                "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -223,7 +217,11 @@
                 "kovey",
                 "php"
             ],
-            "time": "2021-01-13T04:25:55+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/db/issues",
+                "source": "https://github.com/kovey/db/tree/v1.1.7"
+            },
+            "time": "2021-11-25T11:34:23+00:00"
         },
         {
             "name": "kovey/event",
@@ -237,13 +235,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/kovey/event/zipball/7c2b47c70335ca07053b96ce74da35f9a1775773",
                 "reference": "7c2b47c70335ca07053b96ce74da35f9a1775773",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": "^8.0"
@@ -275,33 +267,32 @@
                 "kovey",
                 "php"
             ],
+            "support": {
+                "issues": "https://github.com/kovey/event/issues",
+                "source": "https://github.com/kovey/event/tree/v1.0.3"
+            },
             "time": "2021-03-18T10:36:27+00:00"
         },
         {
             "name": "kovey/library",
-            "version": "v2.1.0",
+            "version": "v2.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/library.git",
-                "reference": "90740c2e3210aec94152f89c122663b7f8066d67"
+                "reference": "ba1e33bf6d75ae9ae029ac06a601e496cc271e72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/library/zipball/90740c2e3210aec94152f89c122663b7f8066d67",
-                "reference": "90740c2e3210aec94152f89c122663b7f8066d67",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/library/zipball/ba1e33bf6d75ae9ae029ac06a601e496cc271e72",
+                "reference": "ba1e33bf6d75ae9ae029ac06a601e496cc271e72",
+                "shasum": ""
             },
             "require": {
                 "ext-swoole": "^4.6.0",
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -331,27 +322,25 @@
                 "lib",
                 "php"
             ],
-            "time": "2021-01-13T04:19:50+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/library/issues",
+                "source": "https://github.com/kovey/library/tree/v2.1.9"
+            },
+            "time": "2021-11-25T07:21:27+00:00"
         },
         {
             "name": "kovey/logger",
-            "version": "v2.0.2",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/logger.git",
-                "reference": "db48f62ae8c72f9527816d641ded5d7daf341017"
+                "reference": "8ba53250fd6e38fba3cf11a2387e3b73bf463fb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/logger/zipball/db48f62ae8c72f9527816d641ded5d7daf341017",
-                "reference": "db48f62ae8c72f9527816d641ded5d7daf341017",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/logger/zipball/8ba53250fd6e38fba3cf11a2387e3b73bf463fb3",
+                "reference": "8ba53250fd6e38fba3cf11a2387e3b73bf463fb3",
+                "shasum": ""
             },
             "require": {
                 "ext-swoole": "^4.6.0",
@@ -384,27 +373,25 @@
                 "logger",
                 "php"
             ],
-            "time": "2021-04-12T15:31:42+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/logger/issues",
+                "source": "https://github.com/kovey/logger/tree/v2.0.6"
+            },
+            "time": "2021-07-21T12:21:17+00:00"
         },
         {
             "name": "kovey/process",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/process.git",
-                "reference": "14bb1691a9e46fd28d8e5b69635d85f40e87ef2a"
+                "reference": "21052bd7b205b0d96184ed4c9d10af256b8ecaa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/process/zipball/14bb1691a9e46fd28d8e5b69635d85f40e87ef2a",
-                "reference": "14bb1691a9e46fd28d8e5b69635d85f40e87ef2a",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/process/zipball/21052bd7b205b0d96184ed4c9d10af256b8ecaa9",
+                "reference": "21052bd7b205b0d96184ed4c9d10af256b8ecaa9",
+                "shasum": ""
             },
             "require": {
                 "ext-swoole": "^4.6.0",
@@ -439,34 +426,35 @@
                 "php",
                 "process"
             ],
-            "time": "2021-04-13T05:16:22+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/process/issues",
+                "source": "https://github.com/kovey/process/tree/v1.0.3"
+            },
+            "time": "2021-08-05T09:17:13+00:00"
         },
         {
             "name": "kovey/redis",
-            "version": "v1.0.1",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/redis.git",
-                "reference": "6d8da6fc37118e16ef713686545184fec93c32f4"
+                "reference": "bf01c3b8f97b1b2a0838093bf2a9d2fdd0fc7b06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/redis/zipball/6d8da6fc37118e16ef713686545184fec93c32f4",
-                "reference": "6d8da6fc37118e16ef713686545184fec93c32f4",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/redis/zipball/bf01c3b8f97b1b2a0838093bf2a9d2fdd0fc7b06",
+                "reference": "bf01c3b8f97b1b2a0838093bf2a9d2fdd0fc7b06",
+                "shasum": ""
             },
             "require": {
                 "ext-redis": ">=5.3",
+                "kovey/library": " ^2.0",
+                "kovey/logger": "^1.0 | ^2.0",
                 "php": ">=8.0"
             },
             "require-dev": {
                 "ext-swoole": ">=4.5.5",
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -493,27 +481,25 @@
                 "php",
                 "redis"
             ],
-            "time": "2020-12-23T02:48:15+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/redis/issues",
+                "source": "https://github.com/kovey/redis/tree/v1.0.3"
+            },
+            "time": "2021-11-25T11:40:30+00:00"
         },
         {
             "name": "kovey/rpc-client",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/rpc-client.git",
-                "reference": "c0e3e55a96f57eeb5193a31145c10d357f76a0e0"
+                "reference": "10f1e484617c3e9ac7362a162fbef214b2009ab7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/rpc-client/zipball/c0e3e55a96f57eeb5193a31145c10d357f76a0e0",
-                "reference": "c0e3e55a96f57eeb5193a31145c10d357f76a0e0",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/rpc-client/zipball/10f1e484617c3e9ac7362a162fbef214b2009ab7",
+                "reference": "10f1e484617c3e9ac7362a162fbef214b2009ab7",
+                "shasum": ""
             },
             "require": {
                 "ext-swoole": "^4.6.0",
@@ -522,6 +508,7 @@
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -549,35 +536,33 @@
                 "php",
                 "rpc"
             ],
-            "time": "2021-04-13T05:20:17+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/rpc-client/issues",
+                "source": "https://github.com/kovey/rpc-client/tree/v2.1.0"
+            },
+            "time": "2021-11-25T12:15:23+00:00"
         },
         {
             "name": "kovey/sharding",
-            "version": "v1.1.2",
+            "version": "v1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kovey/sharding.git",
-                "reference": "1a932b0a9e936dc2c592534b45b168eac196b5f7"
+                "reference": "40cbfcc45aaa34417dd159572adbc179c06892a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kovey/sharding/zipball/1a932b0a9e936dc2c592534b45b168eac196b5f7",
-                "reference": "1a932b0a9e936dc2c592534b45b168eac196b5f7",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "url": "https://api.github.com/repos/kovey/sharding/zipball/40cbfcc45aaa34417dd159572adbc179c06892a2",
+                "reference": "40cbfcc45aaa34417dd159572adbc179c06892a2",
+                "shasum": ""
             },
             "require": {
                 "kovey/connection": "^1.1",
-                "kovey/db": "^1.1",
-                "kovey/redis": "^1.0",
+                "kovey/library": "^2.0",
                 "php": "^8.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.2",
                 "phpunit/phpunit": "^9.3"
             },
             "type": "library",
@@ -605,7 +590,11 @@
                 "php",
                 "sharding"
             ],
-            "time": "2021-04-12T01:36:11+00:00"
+            "support": {
+                "issues": "https://github.com/kovey/sharding/issues",
+                "source": "https://github.com/kovey/sharding/tree/v1.1.5"
+            },
+            "time": "2021-11-25T11:49:32+00:00"
         },
         {
             "name": "kovey/validator",
@@ -619,13 +608,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/kovey/validator/zipball/f90f08270633700cbff1bc3df8bf11df989c43da",
                 "reference": "f90f08270633700cbff1bc3df8bf11df989c43da",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
+                "shasum": ""
             },
             "require": {
                 "php": "^8.0"
@@ -657,10 +640,79 @@
                 "php",
                 "validator"
             ],
+            "support": {
+                "issues": "https://github.com/kovey/validator/issues",
+                "source": "https://github.com/kovey/validator/tree/v1.0.2"
+            },
             "time": "2021-01-29T10:21:37+00:00"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "phpstan/phpstan",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "cbe085f9fdead5b6d62e4c022ca52dc9427a10ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cbe085f9fdead5b6d62e4c022ca52dc9427a10ee",
+                "reference": "cbe085f9fdead5b6d62e4c022ca52dc9427a10ee",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/1.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-11-18T14:09:01+00:00"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
@@ -672,5 +724,5 @@
         "ext-protobuf": "^3.13.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
